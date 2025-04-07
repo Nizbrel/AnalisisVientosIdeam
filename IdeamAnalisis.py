@@ -116,14 +116,15 @@ if ubicaciones:
             st.markdown(f"**Departamento:** {departamento}")
         else:
             st.warning("No se pudo extraer el municipio y el departamento.")
-        # Redondear y formatear estadísticas
-        # Redondear manualmente count como entero y el resto con dos decimales
+        # Redondear manualmente y formatear como string
         stats_rounded = stats.copy()
-        stats_rounded["count"] = int(stats_rounded["count"])
+        stats_rounded["count"] = f"{int(stats_rounded['count'])}"
         for col in ["mean", "std", "min", "25%", "50%", "75%", "max"]:
-            stats_rounded[col] = round(stats_rounded[col], 2)
-      
+            stats_rounded[col] = f"{round(stats_rounded[col], 2):.2f}"
+        
+        # Renombrar con unidades
         stats_with_units = stats_rounded.rename({
+            "count": "count",
             "mean": "mean (m/s)",
             "std": "std (m/s)",
             "min": "min (m/s)",
@@ -132,13 +133,17 @@ if ubicaciones:
             "75%": "75% (m/s)",
             "max": "max (m/s)"
         })
+        
+        # Crear DataFrame bonito
         stats_df = pd.DataFrame(stats_with_units).reset_index()
-        stats_df.columns = ["Estadistica", "Valor"]
-
+        stats_df.columns = ["Estadística", "Valor"]
+        
+        # Mostrar en Streamlit
         st.table(stats_df.style.set_table_styles(
             [{'selector': 'th', 'props': [('text-align', 'center')]},
              {'selector': 'td', 'props': [('text-align', 'center')]}]
-        ).set_properties(**{'width': 'auto'}).set_caption("Estadisticas Descriptivas Velocidad del Viento - Cuantitativa Continua"))
+        ).set_properties(**{'width': 'auto'}).set_caption("Estadísticas Descriptivas Velocidad del Viento - Cuantitativa Continua"))
+
 
         st.markdown("##### Distribución de la Velocidad del Viento")
         df["Fecha2"] = df["Fecha"].dt.date
