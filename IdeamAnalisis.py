@@ -81,20 +81,24 @@ if ubicaciones:
         [u[0] for u in ubicaciones]
     )
 
-    ruta_archivo_seleccionado = next(
-        u for u in ubicaciones if u[0] == ubicacion_seleccionada
-    )[3]
+    # Obtén los datos del archivo seleccionado
+    seleccion = next(u for u in ubicaciones if u[0] == ubicacion_seleccionada)
+    ruta_archivo_seleccionado = seleccion[3]
+    latitud = float(seleccion[1])
+    longitud = float(seleccion[2])
+    ubicacion = seleccion[0]
 
+    # Carga y limpia el archivo
     df = load_and_clean_data(ruta_archivo_seleccionado)
 
     if df.empty:
         st.error("Error: No hay datos válidos después de la limpieza.")
     else:
         stats = df["Velocidad"].describe()
-        municipio, departamento = None, None
 
+        # Extrae municipio y departamento desde el nombre del archivo
         selected_file_name = os.path.basename(ruta_archivo_seleccionado)
-
+        municipio, departamento = None, None
         patrones_municipio_departamento = [
             r'MUNICIPIO\((.*?)\).*?DEPARTAMENTO\((.*?)\)',
             r'_MUNICIPIO_(.*?)_.*?_DEPARTAMENTO_(.*?)_',
@@ -104,6 +108,7 @@ if ubicaciones:
             if coincidencia:
                 municipio, departamento = coincidencia.groups()
                 break
+
 
 
         if municipio and departamento:
