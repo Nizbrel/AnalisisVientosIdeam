@@ -64,18 +64,30 @@ st.title("Análisis de Velocidades del Viento")
 
 uploaded_files = st.file_uploader("Sube tus archivos .DATA", type="DATA", accept_multiple_files=True)
 
-if uploaded_files:
-    ubicaciones = []
-    for i, uploaded_file in enumerate(uploaded_files, start=1):
-        nombre_archivo = uploaded_file.name
-        ubicacion, latitud, longitud = extraer_datos(nombre_archivo)
-        if ubicacion:
-            ubicaciones.append((f"Archivo {i} - {ubicacion}", latitud, longitud, uploaded_file))
+# Ruta a la carpeta dentro del repositorio
+carpeta_datos = "DatosIdeamProcesados"
 
-    ubicacion_seleccionada = st.selectbox("Selecciona la ubicación para el análisis", [u[0] for u in ubicaciones])
-    archivo_seleccionado = next(u for u in ubicaciones if u[0] == ubicacion_seleccionada)[3]
+# Buscar todos los archivos .DATA en esa carpeta
+archivos_data = [f for f in os.listdir(carpeta_datos) if f.lower().endswith(".data")]
 
-    df = load_and_clean_data(archivo_seleccionado)
+ubicaciones = []
+for i, nombre_archivo in enumerate(archivos_data, start=1):
+    ruta_archivo = os.path.join(carpeta_datos, nombre_archivo)
+    ubicacion, latitud, longitud = extraer_datos(nombre_archivo)
+    if ubicacion:
+        ubicaciones.append((f"Archivo {i} - {ubicacion}", latitud, longitud, ruta_archivo))
+
+if ubicaciones:
+    ubicacion_seleccionada = st.selectbox(
+        "Selecciona la ubicación para el análisis",
+        [u[0] for u in ubicaciones]
+    )
+
+    ruta_archivo_seleccionado = next(
+        u for u in ubicaciones if u[0] == ubicacion_seleccionada
+    )[3]
+
+    df = load_and_clean_data(ruta_archivo_seleccionado)
 
     if df.empty:
         st.error("Error: No hay datos válidos después de la limpieza.")
