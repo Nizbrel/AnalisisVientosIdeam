@@ -116,8 +116,10 @@ if ubicaciones:
             st.markdown(f"**Departamento:** {departamento}")
         else:
             st.warning("No se pudo extraer el municipio y el departamento.")
+        # Redondear y formatear estadísticas
+        stats_rounded = stats.apply(lambda x: int(x) if x.name == "count" else round(x, 2))
       
-        stats_with_units = stats.rename({
+        stats_with_units = stats_rounded.rename({
             "mean": "mean (m/s)",
             "std": "std (m/s)",
             "min": "min (m/s)",
