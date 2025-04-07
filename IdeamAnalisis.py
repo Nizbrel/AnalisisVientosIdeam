@@ -19,7 +19,6 @@ PERCENTILE_THRESHOLD = 90  # Modifica este valor según sea necesario
 # Funciones necesarias
 @st.cache_data
 def load_and_clean_data(file):
-    """Carga y limpia datos de viento por bloques (chunks) usando Pandas."""
     chunks = pd.read_csv(file, delimiter="|", names=["Fecha", "Velocidad"], skiprows=1, chunksize=100000)
     df_chunks = []
     for chunk in chunks:
@@ -63,8 +62,6 @@ def crear_mapa(latitud, longitud, ubicacion):
 
 st.title("Análisis de Velocidades del Viento")
 
-
-
 # Ruta a la carpeta dentro del repositorio
 carpeta_datos = "DatosIdeamProcesados"
 
@@ -95,7 +92,9 @@ if ubicaciones:
     else:
         stats = df["Velocidad"].describe()
         municipio, departamento = None, None
-        selected_file_name = os.path.basename(archivo_seleccionado)
+
+        selected_file_name = os.path.basename(ruta_archivo_seleccionado)
+
         patrones_municipio_departamento = [
             r'MUNICIPIO\((.*?)\).*?DEPARTAMENTO\((.*?)\)',
             r'_MUNICIPIO_(.*?)_.*?_DEPARTAMENTO_(.*?)_',
@@ -105,6 +104,7 @@ if ubicaciones:
             if coincidencia:
                 municipio, departamento = coincidencia.groups()
                 break
+
 
         if municipio and departamento:
             st.markdown(f"**Municipio:** {municipio}")
