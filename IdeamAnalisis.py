@@ -116,7 +116,7 @@ if ubicaciones:
             st.markdown(f"**Departamento:** {departamento}")
         else:
             st.warning("No se pudo extraer el municipio y el departamento.")
-        # Redondear manualmente y formatear como string
+        # Redondear y formatear valores
         stats_rounded = stats.copy()
         stats_rounded["count"] = f"{int(stats_rounded['count'])}"
         for col in ["mean", "std", "min", "25%", "50%", "75%", "max"]:
@@ -134,15 +134,20 @@ if ubicaciones:
             "max": "max (m/s)"
         })
         
-        # Crear DataFrame bonito
+        # Crear DataFrame para mostrar
         stats_df = pd.DataFrame(stats_with_units).reset_index()
         stats_df.columns = ["Estadística", "Valor"]
         
-        # Mostrar en Streamlit
-        st.table(stats_df.style.set_table_styles(
-            [{'selector': 'th', 'props': [('text-align', 'center')]},
-             {'selector': 'td', 'props': [('text-align', 'center')]}]
-        ).set_properties(**{'width': 'auto'}).set_caption("Estadísticas Descriptivas Velocidad del Viento - Cuantitativa Continua"))
+        # Mostrar tabla con estilo centrado
+        st.table(
+            stats_df.style
+            .set_table_styles([
+                {'selector': 'th', 'props': [('text-align', 'center')]},
+                {'selector': 'td', 'props': [('text-align', 'center')]}
+            ])
+            .set_properties(**{'text-align': 'center'})
+            .set_caption("Estadísticas Descriptivas Velocidad del Viento - Cuantitativa Continua")
+        )
 
 
         st.markdown("##### Distribución de la Velocidad del Viento")
