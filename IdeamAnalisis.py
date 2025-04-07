@@ -95,7 +95,7 @@ if ubicaciones:
     else:
         stats = df["Velocidad"].describe()
         municipio, departamento = None, None
-        selected_file_name = archivo_seleccionado.name
+        selected_file_name = os.path.basename(archivo_seleccionado)
         patrones_municipio_departamento = [
             r'MUNICIPIO\((.*?)\).*?DEPARTAMENTO\((.*?)\)',
             r'_MUNICIPIO_(.*?)_.*?_DEPARTAMENTO_(.*?)_',
