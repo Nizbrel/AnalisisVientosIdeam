@@ -116,11 +116,13 @@ if ubicaciones:
             st.markdown(f"**Departamento:** {departamento}")
         else:
             st.warning("No se pudo extraer el municipio y el departamento.")
-        # Redondear y formatear valores
+       
+
+        # Redondear y formatear los valores como strings
         stats_rounded = stats.copy()
         stats_rounded["count"] = f"{int(stats_rounded['count'])}"
         for col in ["mean", "std", "min", "25%", "50%", "75%", "max"]:
-            stats_rounded[col] = f"{round(stats_rounded[col], 2):.2f}"
+            stats_rounded[col] = f"{stats_rounded[col]:.2f}"
         
         # Renombrar con unidades
         stats_with_units = stats_rounded.rename({
@@ -134,20 +136,28 @@ if ubicaciones:
             "max": "max (m/s)"
         })
         
-        # Crear DataFrame para mostrar
+        # Crear DataFrame bonito
         stats_df = pd.DataFrame(stats_with_units).reset_index()
         stats_df.columns = ["Estadística", "Valor"]
         
-        # Mostrar tabla con estilo centrado
-        st.table(
-            stats_df.style
-            .set_table_styles([
-                {'selector': 'th', 'props': [('text-align', 'center')]},
-                {'selector': 'td', 'props': [('text-align', 'center')]}
-            ])
-            .set_properties(**{'text-align': 'center'})
-            .set_caption("Estadísticas Descriptivas Velocidad del Viento - Cuantitativa Continua")
+        # Centrar con CSS usando st.markdown y aplicar con st.dataframe
+        st.markdown(
+            """
+            <style>
+            .centered-table td, .centered-table th {
+                text-align: center !important;
+                vertical-align: middle !important;
+            }
+            </style>
+            """, unsafe_allow_html=True
         )
+        
+        # Mostrar la tabla centrada
+        st.dataframe(stats_df.style.set_table_attributes('class="centered-table"'), use_container_width=True, hide_index=True)
+        
+        # Agregar título debajo
+        st.caption("Estadísticas Descriptivas Velocidad del Viento - Cuantitativa Continua")
+
 
 
         st.markdown("##### Distribución de la Velocidad del Viento")
