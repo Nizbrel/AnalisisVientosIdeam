@@ -232,7 +232,7 @@ if ubicaciones:
         st.write("**Hipótesis Nula (H₀):** Los datos siguen una distribución Weibull.")
         max_diff = np.max(np.abs(empirical_cdf - weibull_cdf))
         st.write(f"**Máxima diferencia (D):** {max_diff:.4f}")
-        if max_diff < 0.09:  # Umbral arbitrario para aceptar/rechazar H₀
+        if max_diff < 0.1:  # Umbral arbitrario para aceptar/rechazar H₀
           st.success("No se rechaza H₀: Los datos siguen una distribución Weibull.")
         else:
           st.error("Se rechaza H₀: Los datos no siguen una distribución Weibull.")
