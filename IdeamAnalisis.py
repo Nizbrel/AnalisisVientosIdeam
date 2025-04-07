@@ -62,7 +62,7 @@ def crear_mapa(latitud, longitud, ubicacion):
 
 st.title("Análisis de Velocidades del Viento")
 
-uploaded_files = st.file_uploader("Sube tus archivos .DATA", type="DATA", accept_multiple_files=True)
+
 
 # Ruta a la carpeta dentro del repositorio
 carpeta_datos = "DatosIdeamProcesados"
