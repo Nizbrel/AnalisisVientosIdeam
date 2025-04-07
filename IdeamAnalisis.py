@@ -117,7 +117,11 @@ if ubicaciones:
         else:
             st.warning("No se pudo extraer el municipio y el departamento.")
         # Redondear y formatear estadísticas
-        stats_rounded = stats.apply(lambda x: int(x) if x.name == "count" else round(x, 2))
+        # Redondear manualmente count como entero y el resto con dos decimales
+        stats_rounded = stats.copy()
+        stats_rounded["count"] = int(stats_rounded["count"])
+        for col in ["mean", "std", "min", "25%", "50%", "75%", "max"]:
+            stats_rounded[col] = round(stats_rounded[col], 2)
       
         stats_with_units = stats_rounded.rename({
             "mean": "mean (m/s)",
